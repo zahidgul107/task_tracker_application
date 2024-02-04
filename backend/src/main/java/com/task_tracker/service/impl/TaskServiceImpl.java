@@ -93,6 +93,15 @@ public class TaskServiceImpl implements TaskService {
 	    taskRepo.save(task);
 		return taskDto;
 	}
+	
+	@Override
+	public Map<String, Object> getCount(Principal principal) {
+		User user = userRepo.findByUsername(principal.getName()).get();
+		List<Task> listTask = taskRepo.findByCreatedBy(user);
+		Map<String, Object> response = new HashMap<>();
+        response.put("tasksCount", listTask.size());
+		return response;
+	}
 
 	@Override
 	public Map<String, Object> search(TaskSearch search, HttpSession session, Principal principal) {

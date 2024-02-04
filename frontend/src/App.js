@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Routes, Route, Link, BrowserRouter, Navigate } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle'
 import './App.css'
 
 import AuthService from './services/auth.service'
@@ -19,6 +20,7 @@ import Header from './components/Header'
 import ListTasks from './components/ListTasks'
 import Footer from './components/Footer'
 import AddTask from './components/AddTask'
+import Dashboard from './components/Dashboard'
 
 const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false)
@@ -149,6 +151,14 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Login />}></Route>
+        <Route
+          path="/dashboard"
+          element={
+            <AuthenticatedRoute>
+              <Dashboard />
+            </AuthenticatedRoute>
+          }
+        ></Route>
         <Route
           path="/tasks"
           element={

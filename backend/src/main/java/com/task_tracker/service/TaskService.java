@@ -25,4 +25,6 @@ public interface TaskService {
 
 	Map<String, Object> getPagTasks(int page, HttpSession session, Principal principal);
 
+	Map<String, Object> getCount(Principal principal);
+
 }
