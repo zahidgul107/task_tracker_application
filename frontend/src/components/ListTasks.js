@@ -245,7 +245,7 @@ const ListTasks = () => {
               </div>
             </form>
           </div>
-          <table className="table table-hover table-success table-striped">
+          <table className="table table-hover table-responsive table-success table-striped">
             <thead>
               <tr>
                 <th scope="col">Task Title</th>
@@ -256,7 +256,7 @@ const ListTasks = () => {
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task) => (
+              {tasks?.map((task) => (
                 <tr key={task.id}>
                   <td>{task.title}</td>
                   <td>{task.description}</td>

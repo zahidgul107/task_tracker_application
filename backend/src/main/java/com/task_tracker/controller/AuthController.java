@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.task_tracker.constants.ERole;
 import com.task_tracker.entity.Role;
 import com.task_tracker.entity.User;
+import com.task_tracker.exception.ErrorResponse;
 import com.task_tracker.payload.request.LoginRequest;
 import com.task_tracker.payload.request.SignupRequest;
 import com.task_tracker.payload.response.MessageResponse;
@@ -76,13 +78,20 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult bindingResult) {
+	  if (bindingResult.hasErrors()) {
+	        // Handle validation errors and return appropriate response
+	        List<String> errors = bindingResult.getFieldErrors().stream()
+	                .map(error -> error.getDefaultMessage())
+	                .collect(Collectors.toList());
+	        return ResponseEntity.badRequest().body(new ErrorResponse(errors));
+	    }
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+      return ResponseEntity.badRequest().body(new MessageResponse("Username is already taken!"));
     }
 
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+      return ResponseEntity.badRequest().body(new MessageResponse("Email is already in use!"));
     }
 
     // Create new user's account

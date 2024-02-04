@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
 .ring {
   position: relative;
-  width: 500px;
-  height: 500px;
+  width: 450px;
+  height: 450px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .ring i {
   position: absolute;
   inset: 0;
@@ -96,6 +97,62 @@
 .login .links a {
   color: #fff;
   text-decoration: none;
+}
+
+/* Media query for screens between 320px and 480px */
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  /* Reduce the size of the ring */
+  .ring {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Reduce the size of the login form */
+  .login {
+    width: 200px;
+  }
+
+  /* Reduce the font size of the login h2 */
+  .login h2 {
+    font-size: 1.8em;
+  }
+}
+
+/* Media query for screens between 480px and 768px */
+@media only screen and (min-width: 480px) and (max-width: 768px) {
+  /* Reduce the size of the ring */
+  .ring {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Reduce the size of the login form */
+  .login {
+    width: 160px;
+  }
+
+  /* Reduce the font size of the login h2 */
+  .login h2 {
+    font-size: 2em;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  /* Reduce the size of the ring */
+  .ring {
+    width: 250px;
+    height: 250px;
+  }
+
+  /* Reduce the size of the login form */
+  .login {
+    width: 200px;
+  }
+
+  /* Reduce the font size of the login h2 */
+  .login h2 {
+    font-size: 1.5em;
+  }
 }
 
 /* Css for Register page */
