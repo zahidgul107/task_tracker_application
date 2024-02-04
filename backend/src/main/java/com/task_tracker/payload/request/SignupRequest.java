@@ -5,19 +5,23 @@ import java.util.Set;
 import jakarta.validation.constraints.*;
  
 public class SignupRequest {
-    @NotBlank
-    @Size(min = 3, max = 20)
+	
+	@NotBlank(message = "Name cannot be blank!")
+    private String name;
+	
+    @NotBlank(message = "Username cannot be blank!")
+    @Size(min = 3,message = "Username must be 3 characters!")
     private String username;
  
-    @NotBlank
+    @NotBlank(message = "Email cannot be blank!")
     @Size(max = 50)
     @Email
     private String email;
     
     private Set<String> role;
     
-    @NotBlank
-    @Size(min = 6, max = 40)
+    @NotBlank(message = "Password cannot be blank!")
+    @Size(min = 8, message = "Password must be 8 characters!")
     private String password;
   
     public String getUsername() {
@@ -51,4 +55,15 @@ public class SignupRequest {
     public void setRole(Set<String> role) {
       this.role = role;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+    
+    
+    
 }

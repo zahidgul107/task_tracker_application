@@ -4,36 +4,41 @@ import AuthService from '../services/auth.service'
 import { Link } from 'react-router-dom'
 
 const Register = (props) => {
-  const [message, setMessage] = useState('')
-  const [successMessage, setSuccessMessage] = useState(false)
-  const [errorMessage, setErrorMessage] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   const handleRegistrationForm = (e) => {
     e.preventDefault()
+    if (password !== confirmPassword) {
+      setErrorMessage('Password and Confirm Password do not match')
+      setTimeout(() => setErrorMessage(''), 4000)
+      return
+    }
     setLoading(true)
-    AuthService.register(username, email, password)
+    console.log('name', name)
+    AuthService.register(name, username, email, password)
       .then(
         (response) => {
-          setMessage(response.data.message)
-          setSuccessMessage(true)
-          console.log(response.data)
+          setSuccessMessage(response.data.message)
+          setTimeout(() => setSuccessMessage(''), 4000)
         },
         (error) => {
-          setSuccessMessage(false)
-          setErrorMessage(true)
           const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
+            error.response.data.errors ||
+            error.response.data.message ||
             error.message ||
             error.toString()
 
-          setMessage(resMessage)
+          setErrorMessage(resMessage)
+          console.log(resMessage)
+          console.log(error.response.data.errors)
+          setTimeout(() => setErrorMessage(''), 4000)
         }
       )
       .finally(() => {
@@ -51,13 +56,13 @@ const Register = (props) => {
             className="error-message"
             style={{ display: errorMessage ? 'block' : 'none' }}
           >
-            There was an error in singning up. Please try again later.
+            {errorMessage}
           </div>
           <div
             className="sent-message"
             style={{ display: successMessage ? 'block' : 'none' }}
           >
-            {message}
+            {successMessage}
           </div>
           <form action="#" method="post">
             <input
@@ -88,6 +93,8 @@ const Register = (props) => {
               type="password"
               name="password"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
             <input
@@ -95,8 +102,8 @@ const Register = (props) => {
               type="password"
               name="confirmPassword"
               placeholder="Confirm Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
             <div className="col-md-12 text-center">
