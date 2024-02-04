@@ -1,14 +1,14 @@
-label {
+slabel {
   display: block;
   margin-top: 10px;
 }
 
-.card-container.card {
+.scard-container.scard {
   max-width: 350px !important;
   padding: 40px 40px;
 }
 
-.card {
+.cards {
   background-color: #f7f7f7;
   padding: 20px 25px 30px;
   margin: 0 auto 25px;

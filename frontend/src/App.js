@@ -37,7 +37,6 @@ const App = () => {
 
   useEffect(() => {
     const user = AuthService.getCurrentUser()
-
     if (user) {
       setCurrentUser(user)
       setShowModeratorBoard(user.roles.includes('ROLE_MODERATOR'))

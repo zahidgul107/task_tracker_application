@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,12 @@ import com.task_tracker.dto.TaskDTO;
 import com.task_tracker.dto.TaskSearch;
 import com.task_tracker.entity.Task;
 import com.task_tracker.entity.User;
+import com.task_tracker.exception.ResourceNotFoundException;
 import com.task_tracker.repository.TaskRepository;
 import com.task_tracker.repository.UserRepository;
 import com.task_tracker.service.TaskService;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -53,6 +54,41 @@ public class TaskServiceImpl implements TaskService {
 	public Map<String, Object> getAllTasks(int page, HttpSession session, Principal principal) {
 		TaskSearch search = new TaskSearch();
 		session.setAttribute("page", page);
+		Map<String, Object> response = pagination(search, page, session, principal);
+		return response;
+	}
+	
+	@Override
+	public void deleteTask(Long id) {
+		taskRepo.deleteById(id);
+	}
+
+	@Override
+	public TaskDTO getTodo(Long id) {
+		Task task = taskRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task not found with given id : " + id));
+	    TaskDTO taskDto = new TaskDTO();
+	    taskDto.setId(task.getId());
+	    taskDto.setTitle(task.getTitle());
+	    taskDto.setDescription(task.getDescription());
+	    taskDto.setDueDate(task.getDueDate());
+	    taskDto.setStatus(task.getStatus());
+	    return taskDto;
+	}
+
+	@Override
+	public TaskDTO updateTask(Long id, TaskDTO taskDto) {
+		Task task = taskRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task not found with given id : " + id));
+		task.setTitle(taskDto.getTitle());
+		task.setDescription(taskDto.getDescription());
+		task.setDueDate(taskDto.getDueDate());
+	    task.setStatus(taskDto.getStatus());
+	    taskRepo.save(task);
+		return taskDto;
+	}
+
+	@Override
+	public Map<String, Object> search(TaskSearch search, HttpSession session, Principal principal) {
+		int page = 1;
 		Map<String, Object> response = pagination(search, page, session, principal);
 		return response;
 	}

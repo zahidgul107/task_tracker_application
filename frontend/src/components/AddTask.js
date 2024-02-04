@@ -10,6 +10,20 @@ const AddTask = () => {
   const [status, setStatus] = useState('')
   const [message, setMessage] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const [failMessage, setFailMessage] = useState('')
+
+  const dispatch = (error) => {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString()
+    setErrorMessage(message)
+
+    if (error.response && error.response.status === 401) {
+      EventBus.dispatch('logout')
+    }
+  }
 
   const [errors, setErrors] = useState({
     title: '',
@@ -24,6 +38,7 @@ const AddTask = () => {
 
   useEffect(() => {
     if (id) {
+      console.log('id===  ', id)
       getTask(id)
         .then((response) => {
           console.log(response.data)
@@ -33,7 +48,7 @@ const AddTask = () => {
           setStatus(response.data.status)
         })
         .catch((error) => {
-          console.error(error)
+          dispatch(error)
         })
     }
   }, [id])
@@ -47,34 +62,28 @@ const AddTask = () => {
         updateTask(id, task)
           .then((response) => {
             console.log(response.data)
-            navigator('/tasks')
+            setSuccessMessage(response.data.message)
+            const successMessage = response.data.message
+            navigator('/tasks', { state: { successMessage } })
+            // navigator('/tasks')
           })
           .catch((error) => {
-            console.error(error)
+            dispatch(error)
+          })
+          .finally(() => {
+            setTimeout(() => setSuccessMessage(null), 5000)
           })
       } else {
         createTask(task)
           .then((response) => {
-            console.log(response.data)
-            setMessage(true)
+            setSuccessMessage(response.data.message)
             //  navigator('/tasks')
           })
           .catch((error) => {
-            console.error(error)
-            const errorMessage =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString()
-            setErrorMessage(errorMessage)
-
-            if (error.response && error.response.status === 401) {
-              EventBus.dispatch('logout')
-            }
+            dispatch(error)
           })
           .finally(() => {
-            setTimeout(() => setMessage(false), 5000)
+            setTimeout(() => setSuccessMessage(null), 5000)
           })
       }
     }
@@ -126,94 +135,6 @@ const AddTask = () => {
     }
   }
   return (
-    /*  <div className="container">
-      <br /> <br />
-      <div className="row">
-        <div className="card col-md-6 offset-md-3 offset-md-3">
-          {pageTitle()}
-          {message && (
-            <div className="sent-message" style={{ display: 'block' }}>
-              Task created successfully
-            </div>
-          )}
-          <div className="card-body">
-            <form>
-              <div className="mb-3">
-                <label className="form-label">Title</label>
-                <input
-                  type="text"
-                  className={`form-control ${errors.title ? 'is-invalid' : ''}`}
-                  id="exampleInputEmail1"
-                  aria-describedby="emailHelp"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                {errors.title && (
-                  <div className="invalid-feedback">{errors.title}</div>
-                )}
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Description</label>
-                <textarea
-                  type="text"
-                  className={`form-control ${
-                    errors.description ? 'is-invalid' : ''
-                  }`}
-                  id="exampleInputPassword1"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-                {errors.description && (
-                  <div className="invalid-feedback">{errors.description}</div>
-                )}
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Due Date</label>
-                <input
-                  type="date"
-                  className={`form-control ${
-                    errors.dueDate ? 'is-invalid' : ''
-                  }`}
-                  id="exampleInputPassword1"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                />
-                {errors.dueDate && (
-                  <div className="invalid-feedback">{errors.dueDate}</div>
-                )}
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Status</label>
-                <select
-                  type="email"
-                  className={`form-control ${
-                    errors.status ? 'is-invalid' : ''
-                  }`}
-                  id="exampleInputPassword1"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option value="">Select task status</option>
-                  <option value="PENDING">PENDING</option>
-                  <option value="IN_PROGRESS">IN_PROGRESS</option>
-                  <option value="COMPLETED">COMPLETED</option>
-                </select>
-                {errors.status && (
-                  <div className="invalid-feedback">{errors.status}</div>
-                )}
-              </div>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                onClick={saveOrUpdateTask}
-              >
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div> */
     <>
       {errorMessage ? (
         <div className="container text-center mt-5">
@@ -227,11 +148,26 @@ const AddTask = () => {
           <div className="row">
             <div className="card col-md-6 offset-md-3 offset-md-3">
               {pageTitle()}
-              {message && (
-                <div className="sent-message" style={{ display: 'block' }}>
-                  Task created successfully
-                </div>
-              )}
+              <div class="row w-50 mx-auto">
+                {failMessage && (
+                  <div
+                    class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+                    role="alert"
+                    style={{ width: 'fit-content' }}
+                  >
+                    {failMessage}
+                  </div>
+                )}
+                {successMessage && (
+                  <div
+                    class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+                    role="alert"
+                    style={{ width: 'fitContent' }}
+                  >
+                    {successMessage}
+                  </div>
+                )}
+              </div>
               <div className="card-body">
                 <form>
                   <div className="mb-3">

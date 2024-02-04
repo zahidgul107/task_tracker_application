@@ -22,6 +22,9 @@ import lombok.Setter;
 public class TaskDTO {
 	
 	@NotBlank
+    private Long id;
+	
+	@NotBlank
     @Size(max = 120)
     private String title;
 
