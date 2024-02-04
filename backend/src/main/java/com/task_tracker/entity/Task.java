@@ -45,9 +45,6 @@ public class Task {
 	@NotNull
 	private LocalDate dueDate;
 	
-//	@Column(columnDefinition = "BOOLEAN")
-//    private boolean completed;
-	
 	@Enumerated(EnumType.STRING)
     private TaskStatus status;
 	

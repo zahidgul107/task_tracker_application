@@ -1,5 +1,6 @@
 import React from 'react'
 import './Index.css'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
@@ -20,6 +21,7 @@ const Footer = () => {
                   <ul>
                     <li>
                       <a
+                        target="_blank"
                         className="hover-target"
                         href="https://www.linkedin.com/in/zahid-gul-9056671b2/"
                       >
@@ -28,6 +30,7 @@ const Footer = () => {
                     </li>
                     <li>
                       <a
+                        target="_blank"
                         className="hover-target"
                         href="https://github.com/zahidgul107"
                       >
@@ -36,10 +39,28 @@ const Footer = () => {
                     </li>
                     <li>
                       <a
+                        target="_blank"
                         className="hover-target"
                         href="https://www.instagram.com/zahidgul107/"
                       >
                         <i className="fab fa-instagram"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="hover-target"
+                        href="mailto:zahidgul107@gmail.com"
+                      >
+                        <i className="fas fa-envelope"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        target="_blank"
+                        className="hover-target"
+                        href="https://portfolio-zahidgul107.vercel.app/"
+                      >
+                        <i className="fas fa-briefcase"></i>
                       </a>
                     </li>
                   </ul>

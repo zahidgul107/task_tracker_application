@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import AuthService from '../services/auth.service'
 
 const Header = () => {
@@ -29,10 +29,8 @@ const Header = () => {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           {isAuth && (
-            <NavLink className="nav-item active" to="/dashboard">
-              <a className="nav-link" href="#">
-                Dashboard <span className="sr-only">(current)</span>
-              </a>
+            <NavLink className="nav-item active text-light" to="/dashboard">
+              Dashboard <span className="sr-only">(current)</span>
             </NavLink>
           )}
           {!isAuth && (

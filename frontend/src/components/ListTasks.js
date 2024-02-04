@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import './Index.css'
 import {
-  completeTask,
   deleteTask,
   getAllTasks,
   getPagTasks,
-  inCompleteTask,
   searchTask,
 } from '../services/TaskService'
 import EventBus from '../common/EventBus'
@@ -84,27 +82,6 @@ const ListTasks = () => {
       })
   }
 
-  function markCompleteTask(id) {
-    completeTask(id)
-      .then((response) => {
-        console.log(response.data)
-        listTasks()
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }
-
-  function markInCompleteTask(id) {
-    inCompleteTask(id)
-      .then((response) => {
-        listTasks()
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }
-
   // search
   function search(e) {
     e.preventDefault()
@@ -148,8 +125,6 @@ const ListTasks = () => {
 
   const generatePageNumbers = () => {
     const maxPagesOnEachSide = 1
-    const totalPagesToDisplay = maxPagesOnEachSide * 2 + 1
-
     const startPage = Math.max(1, currentPage - maxPagesOnEachSide)
     const endPage = Math.min(totalPages, currentPage + maxPagesOnEachSide)
 
@@ -192,7 +167,7 @@ const ListTasks = () => {
             )}
           </div>
           <div className="row">
-            <div className="card  border-0 d-flex mb-2 text-center col-md-2 p-2">
+            <div className="card border-0 d-flex mb-2 ml-3 text-center p-2">
               <strong className="font-weight-bold">
                 Total Tasks :{' '}
                 <span className="badge badge-success p-2 rounded-circle">
@@ -245,7 +220,7 @@ const ListTasks = () => {
               </div>
             </form>
           </div>
-          <table className="table table-hover table-responsive table-success table-striped">
+          <table className="table table-hover table-responsive-sm table-success table-striped">
             <thead>
               <tr>
                 <th scope="col">Task Title</th>
@@ -279,18 +254,6 @@ const ListTasks = () => {
                         data-bs-title="Delete Bill"
                       ></i>
                     </a>
-                    {/* <button
-                      className="btn btn-success mr-2"
-                      onClick={() => markCompleteTask(task.id)}
-                    >
-                      Complete
-                    </button>
-                    <button
-                      className="btn btn-warning"
-                      onClick={() => markInCompleteTask(task.id)}
-                    >
-                      InComplete
-                    </button> */}
                   </td>
                 </tr>
               ))}

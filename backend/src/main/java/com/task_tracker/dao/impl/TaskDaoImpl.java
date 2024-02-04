@@ -27,7 +27,7 @@ public class TaskDaoImpl implements TaskDao {
 
 	@Override
 	public List<Task> search(TaskSearch search, User user) {
-		
+
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Task> cq = cb.createQuery(Task.class);
 		Root<Task> root = cq.from(Task.class);
