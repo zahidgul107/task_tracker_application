@@ -1,48 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import { Link, NavLink, Navigate, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import AuthService from '../services/auth.service'
 
-// import AuthVerify from "./common/AuthVerify";
-//import EventBus from './common/EventBus'
-
 const Header = () => {
-  const [showModeratorBoard, setShowModeratorBoard] = useState(false)
-  const [showAdminBoard, setShowAdminBoard] = useState(false)
-  const [currentUser, setCurrentUser] = useState(undefined)
   const navigate = useNavigate()
 
   const isAuth = AuthService.getCurrentUser()
 
   function handleLogout() {
     AuthService.logout()
-    //logOut()
     navigate('/')
   }
-
-  /* useEffect(() => {
-    const user = AuthService.getCurrentUser()
-
-    if (user) {
-      setCurrentUser(user)
-      setShowModeratorBoard(user.roles.includes('ROLE_MODERATOR'))
-      setShowAdminBoard(user.roles.includes('ROLE_ADMIN'))
-    }
-
-    EventBus.on('logout', () => {
-      logOut()
-    })
-
-    return () => {
-      EventBus.remove('logout')
-    }
-  }, [])
-
-  const logOut = () => {
-    AuthService.logout()
-    setShowModeratorBoard(false)
-    setShowAdminBoard(false)
-    setCurrentUser(undefined)
-  }  */
 
   return (
     <nav
@@ -99,17 +66,6 @@ const Header = () => {
               </li>
             )}
           </ul>
-          {/* <form className="d-flex" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form> */}
         </div>
       </div>
     </nav>
