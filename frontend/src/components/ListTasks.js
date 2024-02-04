@@ -5,6 +5,7 @@ import {
   completeTask,
   deleteTask,
   getAllTasks,
+  getPagTasks,
   inCompleteTask,
   searchTask,
 } from '../services/TaskService'
@@ -126,7 +127,18 @@ const ListTasks = () => {
 
   // pagination
   const onPageChange = (page) => {
-    listTasks(page)
+    getPagTasks(page)
+      .then((response) => {
+        const { pagTaskList, totalPages, currentPage, totalItems } =
+          response.data
+        setTasks(pagTaskList)
+        setTotalPages(totalPages)
+        setCurrentPage(currentPage)
+        setTotalItems(totalItems)
+      })
+      .catch((error) => {
+        dispatch(error)
+      })
   }
 
   const generatePageNumbers = () => {

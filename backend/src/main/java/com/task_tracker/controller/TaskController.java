@@ -79,9 +79,17 @@ public class TaskController {
 
 	@GetMapping("/getAllTasks")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public ResponseEntity<Map<String, Object>> getAllTodo(@RequestParam(defaultValue = "0") int page,
+	public ResponseEntity<Map<String, Object>> getAllTask(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size, HttpSession session, Principal principal) {
 		Map<String, Object> response = taskSer.getAllTasks(page,session, principal);
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/getPagTasks")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<Map<String, Object>> getPaginationTasks(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, HttpSession session, Principal principal) {
+		Map<String, Object> response = taskSer.getPagTasks(page,session, principal);
 		return ResponseEntity.ok(response);
 	}
 	
@@ -98,28 +106,9 @@ public class TaskController {
 		taskSer.deleteTask(id);
 		return ResponseEntity.ok("Task Deleted successfully!.");
 	}
-	
-/*	@PostMapping(value = "/searchServiceTaxBill")
-	public String searchServicTaxBill(@ModelAttribute("search") InvoiceSearch search, Model model,HttpSession session, Principal principal) {
-		User user = userRepository.findByUsername(principal.getName());
-	    Optional<Company> company = companyRepository.findByUserId(user.getId());
-		int page = 1;
-		search.setBillType("ServiceTaxBill");
-		model.addAttribute("allInvoiceList", invoiceRepository.findByCompanyAndBillType(company.get(), "ServiceTaxBill"));
-		pagination(search, model, page, session, principal);
-		return "settings/viewServiceTaxBill";
-	}  */
 
-/*	
 
-	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("deleteTodo/{id}")
-	public ResponseEntity<String> deleteTodo(@PathVariable Long id) {
-		taskSer.deleteTodo(id);
-		return ResponseEntity.ok("Todo Deleted successfully!.");
-	}
-
-	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+/*	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	@PatchMapping("completeTodo/{id}")
 	public ResponseEntity<TaskDTO> completeTodo(@PathVariable Long id) {
 		TaskDTO updatedTodo = taskSer.completeTodo(id);

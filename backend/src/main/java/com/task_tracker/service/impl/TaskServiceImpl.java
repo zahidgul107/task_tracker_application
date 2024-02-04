@@ -59,6 +59,14 @@ public class TaskServiceImpl implements TaskService {
 	}
 	
 	@Override
+	public Map<String, Object> getPagTasks(int page, HttpSession session, Principal principal) {
+		TaskSearch search= (TaskSearch) session.getAttribute("search");
+		session.setAttribute("page", page);
+		Map<String, Object> response = pagination(search, page, session, principal);
+		return response;
+	}
+	
+	@Override
 	public void deleteTask(Long id) {
 		taskRepo.deleteById(id);
 	}
