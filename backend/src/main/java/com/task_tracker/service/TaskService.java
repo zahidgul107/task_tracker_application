@@ -23,4 +23,6 @@ public interface TaskService {
 
 	Map<String, Object> search(TaskSearch search, HttpSession session, Principal principal);
 
+	Map<String, Object> getPagTasks(int page, HttpSession session, Principal principal);
+
 }

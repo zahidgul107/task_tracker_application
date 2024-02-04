@@ -31,6 +31,15 @@ export const getAllTasks = (page = 0) => {
   return axios.get(API_URL + '/getAllTasks', { params })
 }
 
+export const getPagTasks = (page = 0) => {
+  const params = {
+    page: page,
+    size: 10, // you can adjust the default size if needed
+  }
+
+  return axios.get(API_URL + '/getPagTasks', { params })
+}
+
 export const inCompleteTask = (id) => {
   return axios.patch(API_URL + 'user')
 }
