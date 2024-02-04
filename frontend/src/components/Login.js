@@ -22,9 +22,8 @@ const Login = () => {
       },
       (error) => {
         const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
+          error.response.data.errors ||
+          error.response.data.message ||
           error.message ||
           error.toString()
 
@@ -79,7 +78,7 @@ const Login = () => {
           )}
         </div>
         <div className="links">
-          <a href="#">Forget Password</a>
+          <a>Forget Password</a>
           <Link to="/register">Signup</Link>
         </div>
       </div>
