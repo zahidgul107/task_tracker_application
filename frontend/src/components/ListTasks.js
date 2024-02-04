@@ -1,32 +1,57 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import './Index.css'
 import {
   completeTask,
   deleteTask,
   getAllTasks,
   inCompleteTask,
+  searchTask,
 } from '../services/TaskService'
 import EventBus from '../common/EventBus'
 
 const ListTasks = () => {
   const [tasks, setTasks] = useState([])
+  const [dueDate, setDueDate] = useState('')
+  const [status, setStatus] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
   const [message, setMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const [failMessage, setFailMessage] = useState('')
+
+  const location = useLocation()
+  const successMessageFromComponent =
+    location.state && location.state.successMessage
 
   const navigator = useNavigate()
 
+  const dispatch = (error) => {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString()
+    setMessage(message)
+
+    if (error.response && error.response.status === 401) {
+      EventBus.dispatch('logout')
+    }
+  }
+
   useEffect(() => {
+    if (successMessageFromComponent) {
+      setSuccessMessage(successMessageFromComponent)
+      const timeoutId = setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    }
     listTasks()
   }, [])
 
   function listTasks(page = 0) {
     getAllTasks(page)
       .then((response) => {
-        console.log(response.data)
-        // setTasks(response.data)
         const { pagTaskList, totalPages, currentPage, totalItems } =
           response.data
         setTasks(pagTaskList)
@@ -35,17 +60,7 @@ const ListTasks = () => {
         setTotalItems(totalItems)
       })
       .catch((error) => {
-        const message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString()
-        setMessage(message)
-
-        if (error.response && error.response.status === 401) {
-          EventBus.dispatch('logout')
-        }
+        dispatch(error)
       })
   }
 
@@ -57,10 +72,13 @@ const ListTasks = () => {
     deleteTask(id)
       .then((response) => {
         listTasks()
-        console.log(response.data)
+        setSuccessMessage(response.data)
       })
       .catch((error) => {
-        console.error(error)
+        dispatch(error)
+      })
+      .finally(() => {
+        setTimeout(() => setSuccessMessage(null), 5000)
       })
   }
 
@@ -85,6 +103,28 @@ const ListTasks = () => {
       })
   }
 
+  // search
+  function search(e) {
+    e.preventDefault()
+    const search = { dueDate, status }
+    searchTask(search)
+      .then((response) => {
+        const { pagTaskList, totalPages, currentPage, totalItems } =
+          response.data
+        setTasks(pagTaskList)
+        setTotalPages(totalPages)
+        setCurrentPage(currentPage)
+        setTotalItems(totalItems)
+      })
+      .catch((error) => {
+        dispatch(error)
+      })
+      .finally(() => {
+        setTimeout(() => setSuccessMessage(null), 5000)
+      })
+  }
+
+  // pagination
   const onPageChange = (page) => {
     listTasks(page)
   }
@@ -114,14 +154,34 @@ const ListTasks = () => {
       ) : (
         <div className="container">
           <h2 className="text-light text-center">List of Tasks</h2>
+          <div class="row w-50 mx-auto">
+            {failMessage && (
+              <div
+                class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+                role="alert"
+                style={{ width: 'fit-content' }}
+              >
+                {failMessage}
+              </div>
+            )}
+            {successMessage && (
+              <div
+                class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+                role="alert"
+                style={{ width: 'fit-content' }}
+              >
+                {successMessage}
+              </div>
+            )}
+          </div>
           <div className="row">
-            <Link
+            {/* <Link
               to="/addTask"
-              className="card  border-0 d-flex mb-0 text-center col-md-3 p-2"
+              className="card  border-0 d-flex mb-0 text-center col-md-3 mb-2 p-2"
             >
               Add Task
-            </Link>
-            <div className="card  border-0 d-flex mb-0 text-center col-md-3 p-2">
+            </Link> */}
+            <div className="card  border-0 d-flex mb-2 text-center col-md-2 p-2">
               <strong className="font-weight-bold">
                 Total Tasks :{' '}
                 <span className="badge badge-success p-2 rounded-circle">
@@ -130,17 +190,23 @@ const ListTasks = () => {
               </strong>
             </div>
           </div>
-          <div className="card table-success form p-4 border-0 shadow-lg">
+          <div className="card table-success mb-2 form p-4 border-0 shadow-lg">
             <form>
               <div className="form-row">
                 <div className="form-group col-md-6">
-                  <label>Due Date</label>{' '}
+                  <label>Status</label>{' '}
                   <select
                     className="form-select form-control"
                     aria-label="Default select example"
+                    value={status}
+                    onChange={(e) =>
+                      setStatus(e.target.value === '' ? null : e.target.value)
+                    }
                   >
-                    <option value="">Select Status*</option>
-                    <option />
+                    <option value="">Select task status</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="IN_PROGRESS">IN_PROGRESS</option>
+                    <option value="COMPLETED">COMPLETED</option>
                   </select>
                 </div>
 
@@ -149,9 +215,8 @@ const ListTasks = () => {
                   <input
                     type="date"
                     className="form-control picker"
-                    id="fromDate"
-                    name="fromDate"
                     placeholder="Enter From Date"
+                    onChange={(e) => setDueDate(e.target.value)}
                   />
                 </div>
               </div>
@@ -161,7 +226,7 @@ const ListTasks = () => {
                   <button
                     type="submit"
                     className="btn btn-outline-primary"
-                    name="search"
+                    onClick={search}
                   >
                     Search
                   </button>
@@ -195,7 +260,7 @@ const ListTasks = () => {
                         data-bs-title="Update Bill "
                       ></i>
                     </a>
-                    <a onClick={() => removeTask(task.id)}>
+                    <a type="button" onClick={() => removeTask(task.id)}>
                       <i
                         class="fa fa-trash text-danger"
                         data-bs-toggle="tooltip"

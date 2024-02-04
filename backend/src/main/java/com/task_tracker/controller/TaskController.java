@@ -1,6 +1,7 @@
 package com.task_tracker.controller;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.task_tracker.dto.TaskDTO;
+import com.task_tracker.dto.TaskSearch;
 import com.task_tracker.service.TaskService;
 
 import jakarta.servlet.http.HttpSession;
@@ -38,25 +40,63 @@ public class TaskController {
 //	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/add")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public ResponseEntity<TaskDTO> addTodo(@RequestBody TaskDTO taskDto, Principal principal) {
-		TaskDTO savedTaskDto = taskSer.createTask(taskDto, principal);
-		return new ResponseEntity<>(savedTaskDto, HttpStatus.CREATED);
+	public ResponseEntity<Map<String, Object>> addTodo(@RequestBody TaskDTO taskDto, Principal principal) {
+		try {
+	        TaskDTO savedTaskDto = taskSer.createTask(taskDto, principal);
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("task", savedTaskDto);
+	        response.put("message", "Task created successfully!");
+	        return new ResponseEntity<>(response, HttpStatus.CREATED);
+	    } catch (Exception e) {
+	        Map<String, Object> errorResponse = new HashMap<>();
+	        errorResponse.put("error", "Failed to create task");
+	        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
+	@PreAuthorize("hasRole('USER')")
+	@PutMapping("updateTask/{id}")
+	public ResponseEntity<Map<String, Object>> updateTask(@PathVariable Long id, @RequestBody TaskDTO TaskDto) {
+		try {
+			TaskDTO updatedTask = taskSer.updateTask(id, TaskDto);
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("updatedTask", updatedTask);
+	        response.put("message", "Task updated successfully!");
+	        return new ResponseEntity<>(response, HttpStatus.CREATED);
+	    } catch (Exception e) {
+	        Map<String, Object> errorResponse = new HashMap<>();
+	        errorResponse.put("error", "Failed to update task");
+	        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
 
-/*	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-	@GetMapping("getTodo/{id}")
-	public ResponseEntity<TaskDTO> getTodo(@PathVariable("id") Long todoId) {
-		TaskDTO TaskDTO = taskSer.getTodo(todoId);
-		return new ResponseEntity<>(TaskDTO, HttpStatus.OK);
-	} */
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	@GetMapping("/getTask/{id}")
+	public ResponseEntity<TaskDTO> getTodo(@PathVariable("id") Long id) {
+		TaskDTO taskDto = taskSer.getTodo(id);
+		return new ResponseEntity<>(taskDto, HttpStatus.OK);
+	}
 
 	@GetMapping("/getAllTasks")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public ResponseEntity<Map<String, Object>> getAllTodo(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size, HttpSession session, Principal principal) {
 		Map<String, Object> response = taskSer.getAllTasks(page,session, principal);
-		System.err.println("hitting==================  ");
 		return ResponseEntity.ok(response);
+	}
+	
+	@PostMapping("/search")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<Map<String, Object>> search(@RequestBody TaskSearch search, HttpSession session, Principal principal) {
+		Map<String, Object> response = taskSer.search(search,session, principal);
+		return ResponseEntity.ok(response);
+	}
+	
+	@PreAuthorize("hasRole('USER')")
+	@DeleteMapping("deleteTask/{id}")
+	public ResponseEntity<String> deleteTodo(@PathVariable Long id) {
+		taskSer.deleteTask(id);
+		return ResponseEntity.ok("Task Deleted successfully!.");
 	}
 	
 /*	@PostMapping(value = "/searchServiceTaxBill")
@@ -70,12 +110,7 @@ public class TaskController {
 		return "settings/viewServiceTaxBill";
 	}  */
 
-/*	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("updateTodo/{id}")
-	public ResponseEntity<TaskDTO> updateTodo(@PathVariable Long id, @RequestBody TaskDTO TaskDTO) {
-		TaskDTO updatedTodo = taskSer.updateTodo(id, TaskDTO);
-		return ResponseEntity.ok(updatedTodo);
-	}
+/*	
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("deleteTodo/{id}")
