@@ -18,14 +18,10 @@ export const searchTask = (search) => {
   return axios.post(API_URL + '/search', search)
 }
 
-// export const getAllTasks = () => {
-//   return axios.get(API_URL + '/getAllTasks')
-// }
-
 export const getAllTasks = (page = 0) => {
   const params = {
     page: page,
-    size: 10, // you can adjust the default size if needed
+    size: 10,
   }
 
   return axios.get(API_URL + '/getAllTasks', { params })
@@ -34,7 +30,7 @@ export const getAllTasks = (page = 0) => {
 export const getPagTasks = (page = 0) => {
   const params = {
     page: page,
-    size: 10, // you can adjust the default size if needed
+    size: 10,
   }
 
   return axios.get(API_URL + '/getPagTasks', { params })

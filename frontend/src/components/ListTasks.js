@@ -72,7 +72,8 @@ const ListTasks = () => {
   function removeTask(id) {
     deleteTask(id)
       .then((response) => {
-        listTasks()
+        const page = 0
+        pagTasks(page)
         setSuccessMessage(response.data)
       })
       .catch((error) => {
@@ -125,8 +126,7 @@ const ListTasks = () => {
       })
   }
 
-  // pagination
-  const onPageChange = (page) => {
+  function pagTasks(page = 0) {
     getPagTasks(page)
       .then((response) => {
         const { pagTaskList, totalPages, currentPage, totalItems } =
@@ -139,6 +139,11 @@ const ListTasks = () => {
       .catch((error) => {
         dispatch(error)
       })
+  }
+
+  // pagination
+  const onPageChange = (page) => {
+    pagTasks(page)
   }
 
   const generatePageNumbers = () => {
@@ -166,10 +171,10 @@ const ListTasks = () => {
       ) : (
         <div className="container">
           <h2 className="text-light text-center">List of Tasks</h2>
-          <div class="row w-50 mx-auto">
+          <div className="row w-50 mx-auto">
             {failMessage && (
               <div
-                class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+                className=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
                 role="alert"
                 style={{ width: 'fit-content' }}
               >
@@ -178,7 +183,7 @@ const ListTasks = () => {
             )}
             {successMessage && (
               <div
-                class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+                className=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
                 role="alert"
                 style={{ width: 'fit-content' }}
               >
@@ -266,7 +271,7 @@ const ListTasks = () => {
                   <td>
                     <a className="mr-2" onClick={() => updateTask(task.id)}>
                       <i
-                        class="fa fa-edit text-success"
+                        className="fa fa-edit text-success"
                         data-bs-toggle="tooltip"
                         data-bs-placement="bottom"
                         data-bs-title="Update Bill "
@@ -274,7 +279,7 @@ const ListTasks = () => {
                     </a>
                     <a type="button" onClick={() => removeTask(task.id)}>
                       <i
-                        class="fa fa-trash text-danger"
+                        className="fa fa-trash text-danger"
                         data-bs-toggle="tooltip"
                         data-bs-placement="bottom"
                         data-bs-title="Delete Bill"

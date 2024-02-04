@@ -65,7 +65,6 @@ const AddTask = () => {
             setSuccessMessage(response.data.message)
             const successMessage = response.data.message
             navigator('/tasks', { state: { successMessage } })
-            // navigator('/tasks')
           })
           .catch((error) => {
             dispatch(error)
@@ -77,7 +76,6 @@ const AddTask = () => {
         createTask(task)
           .then((response) => {
             setSuccessMessage(response.data.message)
-            //  navigator('/tasks')
           })
           .catch((error) => {
             dispatch(error)
@@ -148,10 +146,10 @@ const AddTask = () => {
           <div className="row">
             <div className="card col-md-6 offset-md-3 offset-md-3">
               {pageTitle()}
-              <div class="row w-50 mx-auto">
+              <div className="row w-50 mx-auto">
                 {failMessage && (
                   <div
-                    class=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
+                    className=" col-md-12 m-4 alert alert-icon alert-danger border-danger alert-dismissible fade show text-center "
                     role="alert"
                     style={{ width: 'fit-content' }}
                   >
@@ -160,7 +158,7 @@ const AddTask = () => {
                 )}
                 {successMessage && (
                   <div
-                    class=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
+                    className=" col-md-12 m-4 alert alert-icon alert-success border-success alert-dismissible fade show text-center "
                     role="alert"
                     style={{ width: 'fitContent' }}
                   >
