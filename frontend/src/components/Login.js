@@ -17,7 +17,7 @@ const Login = () => {
     setLoading(true)
     AuthService.login(username, password).then(
       () => {
-        navigate('/tasks')
+        navigate('/dashboard')
         window.location.reload()
       },
       (error) => {

@@ -403,3 +403,107 @@ footer img {
   color: #8000ff;
   background-color: white;
 }
+
+/* css for dashboard cards */
+.counter_section {
+  min-height: auto;
+  display: block;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  border: 0px solid #e7e7e7;
+  padding: 30px 35px;
+  background: #fff;
+  border-radius: 5px;
+  height: 192px;
+  display: flex;
+}
+
+.couter_icon span {
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  margin-top: 5px;
+  padding: 0 5px;
+  font-weight: 500;
+}
+
+.couter_icon span {
+  width: 100%;
+}
+
+.couter_icon i {
+  color: #fff;
+  font-size: 50px;
+  line-height: normal;
+  width: 100%;
+  float: left;
+  text-align: center;
+}
+
+.couter_icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  float: left;
+  margin: 8px 0 8px;
+}
+
+.couter_icon > span {
+  border-right: solid rgba(255, 255, 255, 0.3) 1px;
+  padding-right: 35px;
+}
+
+.counter_no {
+  padding: 0 12px;
+  align-content: center;
+  align-items: center;
+  float: right;
+  width: 100%;
+}
+
+.counter_no p.total_no {
+  margin: 0;
+  font-size: 45px;
+  float: left;
+  width: 100%;
+  line-height: normal;
+  font-weight: 600;
+  color: #455a64;
+  text-align: right;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.counter_no .head_couter {
+  float: left;
+  width: 100%;
+  color: #99abb4;
+  font-weight: 300;
+  margin: 0px 0 0 0;
+  font-size: 20px;
+  text-align: right;
+}
+
+.counter_no .counter_desrp {
+  margin: 0;
+  color: #fff;
+  line-height: 18px;
+}
+
+.yellow_color {
+  color: #ff9800 !important;
+}
+
+.orange_color {
+  color: #ff5722 !important;
+}
+
+.margin_bottom_30 {
+  margin-bottom: 30px;
+}
+
+.full {
+  width: 100%;
+  float: left;
+}

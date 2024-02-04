@@ -192,12 +192,6 @@ const ListTasks = () => {
             )}
           </div>
           <div className="row">
-            {/* <Link
-              to="/addTask"
-              className="card  border-0 d-flex mb-0 text-center col-md-3 mb-2 p-2"
-            >
-              Add Task
-            </Link> */}
             <div className="card  border-0 d-flex mb-2 text-center col-md-2 p-2">
               <strong className="font-weight-bold">
                 Total Tasks :{' '}
