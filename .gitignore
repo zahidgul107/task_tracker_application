@@ -1,3 +1,4 @@
 ### STS ###
 /.metadata/
 .metadata/.*
+/.sonarlint/
